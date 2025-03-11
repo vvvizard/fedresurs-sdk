@@ -8,6 +8,7 @@ use FedResSdk\Config;
 class  BankruptServiceClient extends ClientFedRes {
     
     public const TYPE = 'BankruptService';
+    public $sort = "DatePublish:asc";
 
     public function __construct(Authorization $auth){
    
@@ -42,7 +43,7 @@ class  BankruptServiceClient extends ClientFedRes {
     public function getMessages()
     {
       $url = 'v1/messages?offset='.$this->offset.'&limit='. $this->limit.'&sort='. $this->sort
-      .'&dateBegin='.$this->datePublishBegin.'&dateEnd='.$this->datePublishEnd;
+      .'&datePublishBegin='.$this->datePublishBegin.'&datePublishEnd='.$this->datePublishEnd;
       
       $response = $this->apiRequest("GET", $url);
       $data = json_decode($response, true);
