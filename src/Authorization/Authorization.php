@@ -9,6 +9,7 @@ class Authorization
 {
 
     protected $token = null;
+    protected $mode = "production";
     protected $tokenStorage;
 
     protected $credentials;
@@ -40,6 +41,15 @@ class Authorization
             return true;
         }
         return false;
+    }
+
+    public function setMode($mode){
+        $this->mode = $mode;
+    }
+
+    public function getMode()
+    {
+        return $this->mode;
     }
 
     public function setToken($token)

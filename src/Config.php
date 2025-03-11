@@ -4,8 +4,10 @@ namespace FedResSdk;
 class Config {
    
     protected static $urlToTypes = [
-        'MessagesService' =>  'https://sfact-messages-demo.fedresurs.ru/',
-        'BankruptService' => 'https://bank-publications-demo.fedresurs.ru/'
+        'MessagesServiceTest' =>  'https://sfact-messages-demo.fedresurs.ru/',
+        'BankruptServiceTest' => 'https://bank-publications-demo.fedresurs.ru/',
+        'MessagesService' =>  'https://sfact-messages-prod.fedresurs.ru/',
+        'BankruptService' => 'https://bank-publications-prod.fedresurs.ru/'
     ];
 
     public static function getMainUrl($type){
@@ -17,6 +19,10 @@ class Config {
 
     public static function getDefaultCredentials(){
 
+    }
+
+    public static function resetMainUrls(array $urlToTypes){
+         self::$urlToTypes = $urlToTypes;
     }
     
     

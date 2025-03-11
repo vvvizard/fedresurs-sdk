@@ -13,8 +13,13 @@ class  BankruptServiceClient extends ClientFedRes {
     public function __construct(Authorization $auth){
    
          parent::__construct($auth);
+         
+         $type = self::TYPE;
+         if($auth->getMode() == 'develop'){
+          $type = self::TYPE . 'Test';
+         }
 
-         $this->mainUrl = Config::getMainUrl(self::TYPE);     
+         $this->mainUrl = Config::getMainUrl($type);     
     }
     
     public function auth(){

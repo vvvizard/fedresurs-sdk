@@ -8,7 +8,6 @@ use FedResSdk\Authorization\Authorization;
 
 abstract class ClientFedRes
 {
-
     protected $type;
     protected $headers;
     protected $body;
@@ -32,6 +31,7 @@ abstract class ClientFedRes
         $this->headers = [
             'Content-Type' => 'application/json'
         ];
+        
     }
 
     abstract public function auth();
@@ -74,6 +74,10 @@ abstract class ClientFedRes
         return $response->getBody();
     }
 
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
+    }
     protected function setHeaders($headers)
     {
         $this->headers = $headers;
