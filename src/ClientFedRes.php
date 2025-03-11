@@ -21,7 +21,9 @@ abstract class ClientFedRes
     protected $offset = 0;
     protected $dateBegin;
     protected $dateEnd;
-
+    protected $datePublishBegin;
+    protected $datePublishEnd;
+    protected $messagesType;
 
     public function __construct(Authorization $auth)
     {
@@ -106,6 +108,19 @@ abstract class ClientFedRes
     public function setOffset($offset)
     {
         $this->offset = $offset;
+    }
+
+    public function setDates($dateBegin, $dateEnd)
+    {
+        $this->dateBegin = $dateBegin;
+        $this->dateEnd = $dateEnd;
+        $this->datePublishBegin = $dateBegin;
+        $this->datePublishEnd = $dateEnd;
+    }
+
+    public function setMessagesType($messagesType)
+    {
+        $this->messagesType = $messagesType;
     }
 
     public function setSort($sort)

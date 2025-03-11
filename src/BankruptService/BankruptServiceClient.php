@@ -9,7 +9,6 @@ class  BankruptServiceClient extends ClientFedRes {
     
     public const TYPE = 'BankruptService';
 
-//protected $messagesType = ArbitralDecree
     public function __construct(Authorization $auth){
    
          parent::__construct($auth);
@@ -20,6 +19,8 @@ class  BankruptServiceClient extends ClientFedRes {
          }
 
          $this->mainUrl = Config::getMainUrl($type);     
+         $this->setYesterdayDate();
+         $this->setMessagesType('ArbitralDecree');
     }
     
     public function auth(){
@@ -37,5 +38,35 @@ class  BankruptServiceClient extends ClientFedRes {
 
     public function setAuthHeaders($token){
       $this->headers['Authorization'] = 'Bearer ' . $token;
+    }
+    public function getMessages()
+    {
+      $url = 'v1/messages?offset='.$this->offset.'&limit='. $this->limit.'&sort='. $this->sort
+      .'&dateBegin='.$this->datePublishBegin.'&dateEnd='.$this->datePublishEnd;
+      
+      $response = $this->apiRequest("GET", $url);
+      $data = json_decode($response, true);
+      return $data;
+    }
+
+    public function getMessage($id)
+    {
+      $url = 'v1/messages/'.$id;
+      $response = $this->apiRequest("GET", $url);
+      $data = json_decode($response, true);
+      return $data;
+    }
+
+    public function getFiles($messageId)
+    {
+      $url = 'v1/messages/'.$messageId.'/files/archive';
+      $response = $this->apiRequest("GET", $url);
+      $data = json_decode($response, true);
+      return $data;
+    }
+
+    public function setYesterdayDate(){
+      $this->datePublishBegin = date('Y-m-d', strtotime('-1 day'));
+      $this->datePublishEnd = date('Y-m-d');
     }
 }
