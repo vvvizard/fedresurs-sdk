@@ -102,6 +102,10 @@ class Authorization
         $this->attemps += 1;
     }
 
+    public function getAttemps(){
+        return $this->attemps;
+    }   
+
     public function checkAttemps(){
         return $this->attemps;
     }
