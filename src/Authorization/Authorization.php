@@ -106,10 +106,6 @@ class Authorization
         return $this->attemps;
     }   
 
-    public function checkAttemps(){
-        return $this->attemps;
-    }
-
     public function clearAttemps(){
         $this->attemps = 0;
     }
