@@ -54,4 +54,9 @@ class  MessagesServiceClient extends ClientFedRes
     $data = json_decode($response, true);
     var_dump($data);
   }
+
+  public function getAllMessages(bool $getAll = false){
+    $this->setLimit(100); 
+    return $this->getMessages();
+  }
 }
