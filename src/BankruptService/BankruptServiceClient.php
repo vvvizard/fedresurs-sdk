@@ -76,6 +76,22 @@ class  BankruptServiceClient extends ClientFedRes
     return $data;
   }
 
+  
+  public function getAllMessages(){
+    $this->setLimit(500);
+    $this->setOffset(0);
+
+    $data = $this->getMessages();
+    
+    for($offset = 500;$offset < $data['total']; $offset += 500){
+      $this->setOffset($offset);
+      $chunk = $this->getMessages();
+      $data = array_merge($data, $chunk);
+    } 
+    return $data;
+  }
+
+
   public function getFiles($messageId)
   {
     $url = 'v1/messages/' . $messageId . '/files/archive';
