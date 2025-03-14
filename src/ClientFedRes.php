@@ -38,6 +38,7 @@ abstract class ClientFedRes
 
     abstract public function auth();
     abstract public function setAuthHeaders($token);
+    abstract public function getMessages();
 
     protected function apiRequest($method, $url)
     {
@@ -128,10 +129,10 @@ abstract class ClientFedRes
         $this->sort = $sort;
     }
 
-    public function initDates()
+    public function initDates($daysInterval = 1)
     {
         $hours24 = 60 * 60 * 24;
-        $this->dateBegin = date('Y-m-d', time() - 5 * $hours24);  
+        $this->dateBegin = date('Y-m-d', time() - $daysInterval * $hours24);  
         $this->dateEnd = date('Y-m-d', time());
     }
     public function isAuthorized()
