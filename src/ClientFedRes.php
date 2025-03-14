@@ -33,19 +33,18 @@ abstract class ClientFedRes
         $this->headers = [
             'Content-Type' => 'application/json'
         ];
-        
     }
 
     abstract public function auth();
     abstract public function setAuthHeaders($token);
     abstract public function getMessages();
+    abstract public function getAllMessages();
 
     protected function apiRequest($method, $url)
     {
         try {
             $request = new Request($method, $this->mainUrl . $url, $this->headers, $this->body);
             $response = $this->client->sendAsync($request)->wait();
-        
         } catch (\InvalidArgumentException $e) {
             echo "Неверные данные в запросе1";
             var_dump($e->getMessage());
@@ -77,9 +76,9 @@ abstract class ClientFedRes
         return $response->getBody();
     }
 
-    public function setMode($mode)
+    public function setMainUrl($mainUrl)
     {
-        $this->mode = $mode;
+        $this->mainUrl = $mainUrl;
     }
     protected function setHeaders($headers)
     {
@@ -132,7 +131,7 @@ abstract class ClientFedRes
     public function initDates($daysInterval = 1)
     {
         $hours24 = 60 * 60 * 24;
-        $this->dateBegin = date('Y-m-d', time() - $daysInterval * $hours24);  
+        $this->dateBegin = date('Y-m-d', time() - $daysInterval * $hours24);
         $this->dateEnd = date('Y-m-d', time());
     }
     public function isAuthorized()

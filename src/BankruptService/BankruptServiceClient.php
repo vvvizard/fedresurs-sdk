@@ -56,16 +56,16 @@ class  BankruptServiceClient extends ClientFedRes
     return $data;
   }
 
-  public function getArbitralDecree()
+  public function getArbitralDecree($getAll = false)
   {
     $this->type = "ArbitralDecree";
-    return $this->getMessages();
+    return $getAll  ? $this->getAllMessages() : $this->getMessages();
   }
 
-  public function getCompletionOfExtrajudicialBankruptcy()
+  public function getCompletionOfExtrajudicialBankruptcy($getAll = false)
   {
     $this->type = "CompletionOfExtrajudicialBankruptcy";
-    return $this->getMessages();
+    return $getAll  ? $this->getAllMessages() : $this->getMessages();
   }
 
   public function getMessage($id)
