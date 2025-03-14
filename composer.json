@@ -1,5 +1,5 @@
 {
-    "version": "1.0.1-dev",
+    "version": "1.0.6-dev",
     "name": "vvvizard/fedresurs-sdk",
     "description": "SDK client for WSDL API fedresurs.ru",
     "authors": [
