@@ -5,6 +5,9 @@ namespace FedResSdk;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use FedResSdk\Authorization\Authorization;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Pool;
+use GuzzleHttp\Psr7\Response;
 
 abstract class ClientFedRes
 {
@@ -12,6 +15,7 @@ abstract class ClientFedRes
     protected $headers;
     protected $body;
     protected $mainUrl;
+    protected $route;
     protected $credentials;
     protected $client;
     protected $auth;
@@ -76,10 +80,36 @@ abstract class ClientFedRes
         return $response->getBody();
     }
 
+    protected function poolRequest($requests){
+       
+        $client = $this->client;
+
+        $pool = new Pool($client, $requests, [
+            'concurrency' => 5,
+            'fulfilled' => function (Response $response, $index) {
+                echo $response->getBody();
+
+            },
+            'rejected' => function (RequestException $reason, $index) {
+
+            },
+        ]);
+        
+        $promise = $pool->promise();
+        
+    
+        $promise->wait();      
+    }
+
     public function setMainUrl($mainUrl)
     {
         $this->mainUrl = $mainUrl;
     }
+    
+    public function setRoute($route){
+        $this->route = $route;
+    }
+
     protected function setHeaders($headers)
     {
         $this->headers = $headers;
