@@ -5,7 +5,7 @@ namespace FedResSdk\BankruptService;
 use FedResSdk\Authorization\Authorization;
 use FedResSdk\ClientFedRes;
 use FedResSdk\Config;
-use Request;
+use GuzzleHttp\Psr7\Request;
 
 class  BankruptServiceClient extends ClientFedRes
 {
@@ -15,6 +15,7 @@ class  BankruptServiceClient extends ClientFedRes
   protected const MAX_QUERY_LIMIT = 8;
 
   protected const ROUTE_MESSAGES = 'v1/messages';
+  protected const ROUTE_AUTH = 'v1/auth';
   public $sort = "DatePublish:asc";
 
   public function __construct(Authorization $auth)
@@ -37,7 +38,7 @@ class  BankruptServiceClient extends ClientFedRes
     if (!$this->isAuthorized()) {
 
       $this->body = $this->auth->getAuthDataJson();
-      $response = $this->apiRequest("POST", 'v1/auth');
+      $response = $this->apiRequest("POST", self::ROUTE_AUTH);
       if ($response) {
         $data = json_decode($response, true);
         $this->auth->storeToken($data['jwt']);

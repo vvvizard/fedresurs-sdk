@@ -29,6 +29,8 @@ abstract class ClientFedRes
     protected $datePublishEnd;
     protected $messagesType;
 
+    protected const DEFAULT_DAYS_INTERVAL = 1;
+
     public function __construct(Authorization $auth)
     {
         $this->auth = $auth;
@@ -50,7 +52,7 @@ abstract class ClientFedRes
             $request = new Request($method, $this->mainUrl . $url, $this->headers, $this->body);
             $response = $this->client->sendAsync($request)->wait();
         } catch (\InvalidArgumentException $e) {
-            echo "Неверные данные в запросе1";
+            echo "bad query";
             var_dump($e->getMessage());
         } catch (\Exception $e) {
             echo "Exception";
@@ -59,7 +61,7 @@ abstract class ClientFedRes
             $status = $response->getStatusCode();
 
             if ($status == 400) {
-                echo "Неверные данные";
+                echo "bad request";
                 var_dump($e->getMessage());
                 var_dump($response);
                 die();
@@ -70,7 +72,7 @@ abstract class ClientFedRes
                     $this->auth->deleteToken();
                 }
                 if ($this->auth->getAttemps() > 2) {
-                    echo "Ошибка аторизации";
+                    echo "auth error";
                     die();
                 }
                 $this->auth();
@@ -179,7 +181,7 @@ abstract class ClientFedRes
         return json_encode(get_object_vars($this));
     }
 
-    public function initDates($daysInterval = 1)
+    public function initDates($daysInterval = self::DEFAULT_DAYS_INTERVAL )
     {
         $hours24 = 60 * 60 * 24;
         $this->dateBegin = date('Y-m-d', time() - $daysInterval * $hours24);
