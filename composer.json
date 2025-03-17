@@ -1,7 +1,7 @@
 {
-    "version": "1.0.0-dev",
     "name": "vvvizard/fedresurs-sdk",
     "description": "SDK client for WSDL API fedresurs.ru",
+    "type": "package",
     "authors": [
         {
             "name": "vvvizard",
@@ -11,7 +11,7 @@
     "keywords": ["library", "sdk"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.0",
         "guzzlehttp/guzzle": "^7.3"
     },
     "autoload": {

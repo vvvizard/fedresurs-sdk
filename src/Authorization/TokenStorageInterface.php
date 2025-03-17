@@ -3,10 +3,10 @@ namespace FedResSdk\Authorization;
 
 Interface TokenStorageInterface{
    
- public function getToken(): String;
+ public function getToken();
 
- public function storeToken(String $token): bool;
+ public function storeToken(String $token);
 
- public function deleteToken(): bool;
+ public function deleteToken();
 
 }

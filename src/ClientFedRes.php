@@ -5,14 +5,17 @@ namespace FedResSdk;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use FedResSdk\Authorization\Authorization;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Pool;
+use GuzzleHttp\Psr7\Response;
 
 abstract class ClientFedRes
 {
-
     protected $type;
     protected $headers;
     protected $body;
     protected $mainUrl;
+    protected $route;
     protected $credentials;
     protected $client;
     protected $auth;
@@ -22,7 +25,9 @@ abstract class ClientFedRes
     protected $offset = 0;
     protected $dateBegin;
     protected $dateEnd;
-
+    protected $datePublishBegin;
+    protected $datePublishEnd;
+    protected $messagesType;
 
     public function __construct(Authorization $auth)
     {
@@ -36,13 +41,14 @@ abstract class ClientFedRes
 
     abstract public function auth();
     abstract public function setAuthHeaders($token);
+    abstract public function getMessages();
+    abstract public function getAllMessages();
 
     protected function apiRequest($method, $url)
     {
         try {
             $request = new Request($method, $this->mainUrl . $url, $this->headers, $this->body);
             $response = $this->client->sendAsync($request)->wait();
-        
         } catch (\InvalidArgumentException $e) {
             echo "Неверные данные в запросе1";
             var_dump($e->getMessage());
@@ -72,6 +78,35 @@ abstract class ClientFedRes
             die();
         }
         return $response->getBody();
+    }
+
+    protected function poolRequest($requests)
+    {
+
+        $client = $this->client;
+        $data = [];
+        $pool = new Pool($client, $requests, [
+            'concurrency' => 5,
+            'fulfilled' => function (Response $response, $index) {
+                $data[] = json_decode($response->getBody()->getContents(), true);
+            },
+            'rejected' => function (RequestException $reason, $index) {},
+        ]);
+
+        $promise = $pool->promise();
+        $promise->wait();
+
+        return $data;
+    }
+
+    public function setMainUrl($mainUrl)
+    {
+        $this->mainUrl = $mainUrl;
+    }
+
+    public function setRoute($route)
+    {
+        $this->route = $route;
     }
 
     protected function setHeaders($headers)
@@ -104,15 +139,50 @@ abstract class ClientFedRes
         $this->offset = $offset;
     }
 
+    public function setDates($dateBegin, $dateEnd)
+    {
+        $this->dateBegin = $dateBegin;
+        $this->dateEnd = $dateEnd;
+        $this->datePublishBegin = $dateBegin;
+        $this->datePublishEnd = $dateEnd;
+    }
+
+    public function setMessagesType($messagesType)
+    {
+        $this->messagesType = $messagesType;
+    }
+
     public function setSort($sort)
     {
         $this->sort = $sort;
     }
 
-    public function initDates()
+    public function setParams($params = [])
+    {
+
+        $classParams = get_class_vars(static::class);
+        foreach ($params as $key => $value) {
+
+            if (isset($classParams[$key])) {
+                $this->$key = $value;
+            }
+        }
+    }
+    public function setParamsFromJson($json)
+    {
+        $params = json_decode($json, true);
+        $this->setParams($params);
+    }
+
+    public function getParamsToJson()
+    {
+        return json_encode(get_object_vars($this));
+    }
+
+    public function initDates($daysInterval = 1)
     {
         $hours24 = 60 * 60 * 24;
-        $this->dateBegin = date('Y-m-d', time() - 5 * $hours24);  
+        $this->dateBegin = date('Y-m-d', time() - $daysInterval * $hours24);
         $this->dateEnd = date('Y-m-d', time());
     }
     public function isAuthorized()
