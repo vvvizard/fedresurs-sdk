@@ -15,13 +15,13 @@ class  MessagesServiceClient extends ClientFedRes
   public function __construct(Authorization $auth)
   {
     parent::__construct($auth);
-       
+
     $type = self::TYPE;
-    if($auth->getMode() == 'develop'){
-     $type = self::TYPE . 'Test';
+    if ($auth->getMode() == 'develop') {
+      $type = self::TYPE . 'Test';
     }
 
-    $this->mainUrl = Config::getMainUrl($type); 
+    $this->mainUrl = Config::getMainUrl($type);
   }
 
   public function auth()
@@ -45,39 +45,40 @@ class  MessagesServiceClient extends ClientFedRes
     $this->headers['Authorization'] = 'Bearer ' . $token;
   }
 
-  
+
   public function prepareUrl()
   {
-      $url = $this->route;
+    $url = $this->route;
 
-      ($this->offset !== null) ? $url .= '?offset=' . $this->offset : 0 ;
+    ($this->offset !== null) ? $url .= '?offset=' . $this->offset : 0;
 
-      ($this->limit !== null) ? $url .= '&limit=' . $this->limit : '';
+    ($this->limit !== null) ? $url .= '&limit=' . $this->limit : '';
 
-      ($this->sort !== null) ? $url .= '&sort=' . $this->sort : '';
+    ($this->sort !== null) ? $url .= '&sort=' . $this->sort : '';
 
-      ($this->messagesType !== null) ? $url .= '&type=' . $this->messagesType : '';
-      
-      ($this->dateBegin !== null) ? $url .= '&dateBegin=' . $this->dateBegin : '';
-      
-      ($this->dateEnd !== null) ? $url .= '&dateEnd=' . $this->dateEnd : '';
+    ($this->messagesType !== null) ? $url .= '&type=' . $this->messagesType : '';
+
+    ($this->dateBegin !== null) ? $url .= '&dateBegin=' . $this->dateBegin : '';
+
+    ($this->dateEnd !== null) ? $url .= '&dateEnd=' . $this->dateEnd : '';
 
 
-      return $url;
+    return $url;
   }
 
 
   public function getMessages()
   {
     $url = $this->prepareUrl();
-    
+
     $response = $this->apiRequest("GET", $url);
     $data = json_decode($response, true);
     return $data;
   }
 
-  public function getAllMessages(bool $getAll = false){
-    $this->setLimit(100); 
+  public function getAllMessages(bool $getAll = false)
+  {
+    $this->setLimit(100);
     return $this->getMessages();
   }
 }
