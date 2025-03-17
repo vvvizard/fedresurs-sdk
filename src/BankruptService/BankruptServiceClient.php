@@ -5,11 +5,16 @@ namespace FedResSdk\BankruptService;
 use FedResSdk\Authorization\Authorization;
 use FedResSdk\ClientFedRes;
 use FedResSdk\Config;
+use Request;
 
 class  BankruptServiceClient extends ClientFedRes
 {
 
   public const TYPE = 'BankruptService';
+  protected const MAX_MESSAGES_LIMIT = 500;
+  protected const MAX_QUERY_LIMIT = 8;
+
+  protected const ROUTE_MESSAGES = 'v1/messages';
   public $sort = "DatePublish:asc";
 
   public function __construct(Authorization $auth)
@@ -45,12 +50,31 @@ class  BankruptServiceClient extends ClientFedRes
   {
     $this->headers['Authorization'] = 'Bearer ' . $token;
   }
+
+  public function prepareUrl()
+  {
+    $url = $this->route;
+
+    ($this->offset !== null) ? $url .= '?offset=' . $this->offset : 0;
+
+    ($this->limit !== null) ? $url .= '&limit=' . $this->limit : '';
+
+    ($this->sort !== null) ? $url .= '&sort=' . $this->sort : '';
+
+    ($this->datePublishBegin !== null) ? $url .= '&datePublishBegin=' . $this->datePublishBegin : '';
+
+    ($this->datePublishEnd !== null) ? $url .= '&datePublishEnd=' . $this->datePublishEnd : '';
+
+    ($this->messagesType !== null) ? $url .= '&type=' . $this->messagesType : '';
+
+
+    return $url;
+  }
+
   public function getMessages()
   {
-    $url = 'v1/messages?offset=' . $this->offset . '&limit=' . $this->limit . '&sort=' . $this->sort
-      . '&datePublishBegin=' . $this->datePublishBegin . '&datePublishEnd=' . $this->datePublishEnd
-      . '&type=' . $this->messagesType;
-
+    $this->route = self::ROUTE_MESSAGES;
+    $url = $this->prepareUrl();
     $response = $this->apiRequest("GET", $url);
     $data = json_decode($response, true);
     return $data;
@@ -70,31 +94,55 @@ class  BankruptServiceClient extends ClientFedRes
 
   public function getMessage($id)
   {
-    $url = 'v1/messages/' . $id;
+    $url = self::ROUTE_MESSAGES . $id;
     $response = $this->apiRequest("GET", $url);
     $data = json_decode($response, true);
     return $data;
   }
 
-  
-  public function getAllMessages(){
-    $this->setLimit(500);
+
+  public function getAllMessages()
+  {
+    $this->setLimit(self::MAX_MESSAGES_LIMIT);
     $this->setOffset(0);
 
     $data = $this->getMessages();
-    
-    for($offset = 500;$offset < $data['total']; $offset += 500){
+    $requests = [(new Request('GET', $this->prepareUrl()))];
+
+    for ($offset = self::MAX_MESSAGES_LIMIT; $offset < $data['total']; $offset += self::MAX_MESSAGES_LIMIT) {
       $this->setOffset($offset);
-      $chunk = $this->getMessages();
-      $data = array_merge($data, $chunk);
-    } 
-    return $data;
+      $url = $this->prepareUrl();
+      $requests[] = new Request('GET', $url);
+    }
+    return $this->poolRequest($requests);
+  }
+
+  public function getMessagesWithCards(array $messagesIds, $params = [])
+  {
+
+    if (!empty($params)) {
+      $this->setParams($params);
+    }
+    $requests = [];
+    $responses = [];
+    $countRequest = 0;
+    foreach ($messagesIds as $key => $messageId) {
+      $url = self::ROUTE_MESSAGES . "/" . $messageId;
+      $requests[] = new Request('GET', $url);
+      $countRequest++;
+      if ($countRequest == self::MAX_QUERY_LIMIT) {
+        $responses = array_merge($responses, $this->poolRequest($requests));
+        $countRequest = 0;
+        $requests = [];
+      }
+    }
+    return $responses;
   }
 
 
   public function getFiles($messageId)
   {
-    $url = 'v1/messages/' . $messageId . '/files/archive';
+    $url = self::ROUTE_MESSAGES . $messageId . '/files/archive';
     $response = $this->apiRequest("GET", $url);
     $data = json_decode($response, true);
     return $data;
@@ -103,6 +151,6 @@ class  BankruptServiceClient extends ClientFedRes
   public function setYesterdayDate()
   {
     $this->datePublishBegin = date('Y-m-d', strtotime('-1 day'));
-    $this->datePublishEnd = date('Y-m-d');
+    $this->datePublishEnd = $this->datePublishBegin;
   }
 }
