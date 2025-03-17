@@ -80,33 +80,32 @@ abstract class ClientFedRes
         return $response->getBody();
     }
 
-    protected function poolRequest($requests){
-       
-        $client = $this->client;
+    protected function poolRequest($requests)
+    {
 
+        $client = $this->client;
+        $data = [];
         $pool = new Pool($client, $requests, [
             'concurrency' => 5,
             'fulfilled' => function (Response $response, $index) {
-                echo $response->getBody();
-
+                $data[] = json_decode($response->getBody()->getContents(), true);
             },
-            'rejected' => function (RequestException $reason, $index) {
-
-            },
+            'rejected' => function (RequestException $reason, $index) {},
         ]);
-        
+
         $promise = $pool->promise();
-        
-    
-        $promise->wait();      
+        $promise->wait();
+
+        return $data;
     }
 
     public function setMainUrl($mainUrl)
     {
         $this->mainUrl = $mainUrl;
     }
-    
-    public function setRoute($route){
+
+    public function setRoute($route)
+    {
         $this->route = $route;
     }
 
@@ -156,6 +155,28 @@ abstract class ClientFedRes
     public function setSort($sort)
     {
         $this->sort = $sort;
+    }
+
+    public function setParams($params = [])
+    {
+
+        $classParams = get_class_vars(static::class);
+        foreach ($params as $key => $value) {
+
+            if (isset($classParams[$key])) {
+                $this->$key = $value;
+            }
+        }
+    }
+    public function setParamsFromJson($json)
+    {
+        $params = json_decode($json, true);
+        $this->setParams($params);
+    }
+
+    public function getParamsToJson()
+    {
+        return json_encode(get_object_vars($this));
     }
 
     public function initDates($daysInterval = 1)
