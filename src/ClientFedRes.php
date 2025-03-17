@@ -89,7 +89,7 @@ abstract class ClientFedRes
         $data = [];
         $pool = new Pool($client, $requests, [
             'concurrency' => 5,
-            'fulfilled' => function (Response $response, $index) {
+            'fulfilled' => function (Response $response, $index) use(&$data) {
                 $data[] = json_decode($response->getBody()->getContents(), true);
             },
             'rejected' => function (RequestException $reason, $index) {},
