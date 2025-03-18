@@ -84,7 +84,6 @@ abstract class ClientFedRes
 
     protected function poolRequest($requests)
     {
-
         $client = $this->client;
         $data = [];
         $pool = new Pool($client, $requests, [
@@ -161,7 +160,6 @@ abstract class ClientFedRes
 
     public function setParams($params = [])
     {
-
         $classParams = get_class_vars(static::class);
         foreach ($params as $key => $value) {
 
