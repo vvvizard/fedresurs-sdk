@@ -20,7 +20,6 @@ class  BankruptServiceClient extends ClientFedRes
 
   public function __construct(Authorization $auth)
   {
-
     parent::__construct($auth);
 
     $type = self::TYPE;
@@ -68,7 +67,6 @@ class  BankruptServiceClient extends ClientFedRes
 
     ($this->messagesType !== null) ? $url .= '&type=' . $this->messagesType : '';
 
-
     return $url;
   }
 
@@ -79,6 +77,11 @@ class  BankruptServiceClient extends ClientFedRes
     $response = $this->apiRequest("GET", $url);
     $data = json_decode($response, true);
     return $data;
+  }
+
+  public function getMessagesIds(){
+    $data = $this->getMessages();
+    return array_column($data['pageData'],'guid');
   }
 
   public function getArbitralDecree($getAll = false)
@@ -120,7 +123,6 @@ class  BankruptServiceClient extends ClientFedRes
 
   public function getMessagesWithCards(array $messagesIds, $params = [])
   {
-
     if (!empty($params)) {
       $this->setParams($params);
     }
