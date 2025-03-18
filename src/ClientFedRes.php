@@ -30,6 +30,7 @@ abstract class ClientFedRes
     protected $messagesType;
 
     protected const DEFAULT_DAYS_INTERVAL = 1;
+    protected const DEFAULT_CONCURRENCY = 5;
 
     public function __construct(Authorization $auth)
     {
@@ -87,7 +88,7 @@ abstract class ClientFedRes
         $client = $this->client;
         $data = [];
         $pool = new Pool($client, $requests, [
-            'concurrency' => 5,
+            'concurrency' => self::DEFAULT_CONCURRENCY,
             'fulfilled' => function (Response $response, $index) use(&$data) {
                 $data[] = json_decode($response->getBody()->getContents(), true);
             },
