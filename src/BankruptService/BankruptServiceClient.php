@@ -79,9 +79,10 @@ class  BankruptServiceClient extends ClientFedRes
     return $data;
   }
 
-  public function getMessagesIds(){
+  public function getMessagesIds()
+  {
     $data = $this->getMessages();
-    return array_column($data['pageData'],'guid');
+    return array_column($data['pageData'], 'guid');
   }
 
   public function getArbitralDecree($getAll = false)
@@ -134,7 +135,9 @@ class  BankruptServiceClient extends ClientFedRes
       $requests[] = new Request('GET', $this->mainUrl . $url,  $this->headers, $this->body);
       $countRequest++;
       if ($countRequest == self::MAX_QUERY_LIMIT || $countRequest >= count($messagesIds)) {
-        $responses = array_merge($responses, $this->poolRequest($requests));
+        $response = $this->poolRequest($requests);
+        $response = $this->createMessagesWithCards($response);
+        $responses = array_merge($responses, $response);
         $countRequest = 0;
         $requests = [];
       }
@@ -142,10 +145,28 @@ class  BankruptServiceClient extends ClientFedRes
     return $responses;
   }
 
+  protected function createMessagesWithCards(array $messages)
+  {
+    $resultMessages = [];
+    foreach ($messages as $message) {
+      $message['files'] = $this->getFiles($message['guid']);
+      $message['linked'] = $this->getLinkedMessages($message['guid']);
+      $resultMessages[] = $message;
+    }
+    return $resultMessages;
+  }
 
   public function getFiles($messageId)
   {
-    $url = self::ROUTE_MESSAGES . $messageId . '/files/archive';
+    $url = self::ROUTE_MESSAGES . "/" . $messageId . '/files/archive';
+    $response = $this->apiRequest("GET", $url);
+    $data = json_decode($response, true);
+    return $data;
+  }
+
+  public function getLinkedMessages($messageId)
+  {
+    $url = self::ROUTE_MESSAGES . "/" . $messageId . '/linked';
     $response = $this->apiRequest("GET", $url);
     $data = json_decode($response, true);
     return $data;
