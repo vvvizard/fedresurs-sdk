@@ -131,7 +131,7 @@ class  BankruptServiceClient extends ClientFedRes
     $countRequest = 0;
     foreach ($messagesIds as $key => $messageId) {
       $url = self::ROUTE_MESSAGES . "/" . $messageId;
-      $requests[] = new Request('GET', $url);
+      $requests[] = new Request('GET', $this->mainUrl . $url,  $this->headers, $this->body);
       $countRequest++;
       if ($countRequest == self::MAX_QUERY_LIMIT || $countRequest >= count($messagesIds)) {
         $responses = array_merge($responses, $this->poolRequest($requests));
