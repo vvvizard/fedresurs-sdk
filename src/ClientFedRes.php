@@ -163,8 +163,7 @@ abstract class ClientFedRes
     {
         $classParams = get_class_vars(static::class);
         foreach ($params as $key => $value) {
-
-            if (isset($classParams[$key])) {
+            if (array_key_exists($key,$classParams)) {
                 $this->$key = $value;
             }
         }
