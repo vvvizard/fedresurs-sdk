@@ -6,6 +6,7 @@ use FedResSdk\Authorization\Authorization;
 use FedResSdk\ClientFedRes;
 use FedResSdk\Config;
 use GuzzleHttp\Psr7\Request;
+use FedResSdk\BankruptService\XmlCardParser;
 
 class  BankruptServiceClient extends ClientFedRes
 {
@@ -156,6 +157,9 @@ class  BankruptServiceClient extends ClientFedRes
     return $resultMessages;
   }
 
+  protected function parseXml($xml){
+    $xmlParser = new XmlCardParser($xml);
+  }
   public function getFiles($messageId)
   {
     $url = self::ROUTE_MESSAGES . "/" . $messageId . '/files/archive';
