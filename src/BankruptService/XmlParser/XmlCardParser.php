@@ -1,20 +1,24 @@
 <?php
 
-namespace FedResSdk\BankruptService;
+namespace FedResSdk\BankruptService\XmlParser;
 
 use SimpleXMLElement;
 use FedResSdk\BankruptService\Dictionary;
 
-class  XmlCardParser 
+abstract class  XmlCardParser 
 {
 
   protected $xml;
   protected $dictionary;
+
+     
     public function __construct($xml)
     {
       $this->xml = simplexml_load_string($xml);
       $this->dictionary = new Dictionary();
     }
+
+    abstract public function parse();
 
     public function getPublisher()
     {

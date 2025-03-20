@@ -1,10 +1,10 @@
 <?php
 
-namespace FedResSdk\BankruptService;
+namespace FedResSdk\BankruptService\XmlParser;
 
-use FedResSdk\BankruptService\XmlCardParser;
+use FedResSdk\BankruptService\XmlParser\XmlCardParser;
 
-class  ExtrajudicialBankruptcyXmlParser extends XmlCardParser
+class  CompletionOfExtrajudicialBankruptcyXmlParser extends XmlCardParser
 {
     public const TYPE = 'CompletionOfExtrajudicialBankruptcy';
    
@@ -12,7 +12,15 @@ class  ExtrajudicialBankruptcyXmlParser extends XmlCardParser
     {
         parent::__construct($xml);
     }  
-    
+    public function parse(){
+        return [
+            'number' => $this->getNumber(),
+            'text' => $this->getText(),
+            'bankrupt' => $this->getBankrupt(),
+            'birthDate' => $this->getBirthDate(),
+            'type' => 'CompletionOfExtrajudicialBankruptcy'
+        ];
+    }
     public function getNumber(){
         return (string) $this->getMessageInfo()->CompletionOfExtrajudicialBankruptcy->StartOfExtrajudicialBankruptcyMessageNumber;
     }

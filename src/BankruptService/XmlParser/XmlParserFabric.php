@@ -1,0 +1,12 @@
+<?php
+
+namespace FedResSdk\BankruptService\XmlParser;
+
+class XmlParserFabric
+{
+    public function create($type, $xml)
+    {
+        $xmlParser = __NAMESPACE__ . $type;
+        return class_exists($xmlParser) ? new $xmlParser($xml): null;
+    }
+}

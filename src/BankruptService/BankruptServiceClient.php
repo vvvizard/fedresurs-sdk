@@ -6,7 +6,7 @@ use FedResSdk\Authorization\Authorization;
 use FedResSdk\ClientFedRes;
 use FedResSdk\Config;
 use GuzzleHttp\Psr7\Request;
-use FedResSdk\BankruptService\XmlCardParser;
+use FedResSdk\BankruptService\XmlParser\XmlParserFabric;
 
 class  BankruptServiceClient extends ClientFedRes
 {
@@ -158,7 +158,8 @@ class  BankruptServiceClient extends ClientFedRes
   }
 
   protected function parseXml($xml){
-    $xmlParser = new XmlCardParser($xml);
+    $xmlParser = new XmlParserFabric($this->messagesType, $xml);
+    return $xmlParser ? $xmlParser->parse() : $xml;
   }
   public function getFiles($messageId)
   {
