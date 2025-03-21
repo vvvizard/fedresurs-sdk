@@ -150,7 +150,7 @@ class  BankruptServiceClient extends ClientFedRes
   {
     $resultMessages = [];
     foreach ($messages as $message) {
-      $message['files'] = $this->getFiles($message['guid']);
+      //$message['files'] = $this->getFiles($message['guid']);
       $message['linked'] = $this->getLinkedMessages($message['guid']);
       $resultMessages[] = $message;
     }
