@@ -6,12 +6,18 @@ use FedResSdk\Authorization\Authorization;
 use FedResSdk\ClientFedRes;
 use FedResSdk\Config;
 
+/**
+ * Client for MessagesService 
+ * Message-Stats
+ */
 class  MessagesServiceClient extends ClientFedRes
 {
 
   public const TYPE = 'MessagesService';
 
-
+  /**
+   * @param \FedResSdk\Authorization\Authorization $auth
+   */
   public function __construct(Authorization $auth)
   {
     parent::__construct($auth);
@@ -45,7 +51,9 @@ class  MessagesServiceClient extends ClientFedRes
     $this->headers['Authorization'] = 'Bearer ' . $token;
   }
 
-
+   /**
+   * preparing url for request
+   */
   public function prepareUrl()
   {
     $url = $this->route;

@@ -1,7 +1,10 @@
 <?php
 
 namespace FedResSdk\BankruptService\XmlParser;
-
+/**
+ * Fabric for XmlParsers, 
+ * type of xml parser depends from message type
+ */
 class XmlParserFabric
 {
     public function create($type, $xml)

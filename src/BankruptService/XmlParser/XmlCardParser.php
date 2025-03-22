@@ -4,7 +4,9 @@ namespace FedResSdk\BankruptService\XmlParser;
 
 use SimpleXMLElement;
 use FedResSdk\BankruptService\Dictionary;
-
+/**
+ * Base class for all XML parsers
+ */
 abstract class  XmlCardParser 
 {
 

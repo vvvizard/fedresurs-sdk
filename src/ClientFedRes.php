@@ -11,7 +11,7 @@ use GuzzleHttp\Psr7\Response;
 
 abstract class ClientFedRes
 {
-    protected $type;
+
     protected $headers;
     protected $body;
     protected $mainUrl;
@@ -46,7 +46,12 @@ abstract class ClientFedRes
     abstract public function setAuthHeaders($token);
     abstract public function getMessages();
     abstract public function getAllMessages();
-
+    
+    /**
+     * Sending a request to the API
+     * @param mixed $method
+     * @param mixed $url
+     */
     protected function apiRequest($method, $url)
     {
         try {
@@ -83,13 +88,18 @@ abstract class ClientFedRes
         return $response->getBody();
     }
 
+    /**
+     * Sending a pool of requests to the API
+     * @param mixed $requests
+     * @return array
+     */
     protected function poolRequest($requests)
     {
         $client = $this->client;
         $data = [];
         $pool = new Pool($client, $requests, [
             'concurrency' => self::DEFAULT_CONCURRENCY,
-            'fulfilled' => function (Response $response, $index) use(&$data) {
+            'fulfilled' => function (Response $response, $index) use (&$data) {
                 $data[] = json_decode($response->getBody()->getContents(), true);
             },
             'rejected' => function (RequestException $reason, $index) {},
@@ -159,27 +169,45 @@ abstract class ClientFedRes
         $this->sort = $sort;
     }
 
+    /**
+     * Setting any params from array,
+     * like $this->setParams(['limit' => 100, 'offset' => 0]);
+     * @param mixed $params
+     * @return void
+     */
     public function setParams($params = [])
     {
         $classParams = get_class_vars(static::class);
         foreach ($params as $key => $value) {
-            if (array_key_exists($key,$classParams)) {
+            if (array_key_exists($key, $classParams)) {
                 $this->$key = $value;
             }
         }
     }
+    
+    /**
+     * Setting any params from json,
+     * like $this->setParamsFromJson('{"limit": 100, "offset": 0}');
+     * @param mixed $json
+     * @return void
+     */
     public function setParamsFromJson($json)
     {
         $params = json_decode($json, true);
         $this->setParams($params);
     }
 
+    /**
+     * getting all params to JSON
+     * like $this->limit, $this->offset and etc.
+     * @return bool|string
+     */
     public function getParamsToJson()
     {
         return json_encode(get_object_vars($this));
     }
 
-    public function initDates($daysInterval = self::DEFAULT_DAYS_INTERVAL )
+    public function initDates($daysInterval = self::DEFAULT_DAYS_INTERVAL)
     {
         $hours24 = 60 * 60 * 24;
         $this->dateBegin = date('Y-m-d', time() - $daysInterval * $hours24);

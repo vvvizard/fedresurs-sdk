@@ -8,9 +8,11 @@ use FedResSdk\Config;
 use GuzzleHttp\Psr7\Request;
 use FedResSdk\BankruptService\XmlParser\XmlParserFabric;
 
+/**
+ * Client for BankruptService
+ */
 class  BankruptServiceClient extends ClientFedRes
 {
-
   public const TYPE = 'BankruptService';
   protected const MAX_MESSAGES_LIMIT = 500;
   protected const MAX_QUERY_LIMIT = 8;
@@ -19,6 +21,9 @@ class  BankruptServiceClient extends ClientFedRes
   protected const ROUTE_AUTH = 'v1/auth';
   public $sort = "DatePublish:asc";
 
+  /**
+   * @param \FedResSdk\Authorization\Authorization $auth
+   */
   public function __construct(Authorization $auth)
   {
     parent::__construct($auth);
@@ -46,12 +51,20 @@ class  BankruptServiceClient extends ClientFedRes
       }
     }
   }
-
+  
+  /**
+   * setting headers for auth
+   * @param mixed $token
+   * @return void
+   */
   public function setAuthHeaders($token)
   {
     $this->headers['Authorization'] = 'Bearer ' . $token;
   }
 
+  /**
+   * preparing url for request
+   */
   public function prepareUrl()
   {
     $url = $this->route;
@@ -86,15 +99,23 @@ class  BankruptServiceClient extends ClientFedRes
     return array_column($data['pageData'], 'guid');
   }
 
+  /**
+   * getting messages with ArbitralDecree type
+   * @param mixed $getAll 
+   */
   public function getArbitralDecree($getAll = false)
   {
-    $this->type = "ArbitralDecree";
+    $this->messagesType= "ArbitralDecree";
     return $getAll  ? $this->getAllMessages() : $this->getMessages();
   }
 
+  /**
+   * getting messages with completionOfExtrajudicialBankruptcy type
+   * @param mixed $getAll
+   */
   public function getCompletionOfExtrajudicialBankruptcy($getAll = false)
   {
-    $this->type = "CompletionOfExtrajudicialBankruptcy";
+    $this->messagesType = "CompletionOfExtrajudicialBankruptcy";
     return $getAll  ? $this->getAllMessages() : $this->getMessages();
   }
 
@@ -123,6 +144,12 @@ class  BankruptServiceClient extends ClientFedRes
     return $this->poolRequest($requests);
   }
 
+  /**
+   * Gets list of messages with all data from inner cards 
+   * @param array $messagesIds
+   * @param mixed $params
+   * @return array
+   */
   public function getMessagesWithCards(array $messagesIds, $params = [])
   {
     if (!empty($params)) {
@@ -146,6 +173,11 @@ class  BankruptServiceClient extends ClientFedRes
     return $responses;
   }
 
+  /**
+   * creates message card 
+   * @param array $messages
+   * @return array
+   */
   protected function createMessagesWithCards(array $messages)
   {
     $resultMessages = [];
@@ -157,10 +189,20 @@ class  BankruptServiceClient extends ClientFedRes
     return $resultMessages;
   }
 
+  /**
+   * Parsing xml and converting it to array
+   * with formatted data
+   * @param mixed $xml
+   */
   protected function parseXml($xml){
     $xmlParser = new XmlParserFabric($this->messagesType, $xml);
     return $xmlParser ? $xmlParser->parse() : $xml;
   }
+ 
+  /**
+   * getting files from message card
+   * @param mixed $messageId
+   */
   public function getFiles($messageId)
   {
     $url = self::ROUTE_MESSAGES . "/" . $messageId . '/files/archive';
@@ -169,6 +211,10 @@ class  BankruptServiceClient extends ClientFedRes
     return $data;
   }
 
+  /**
+   * retuning linked messages noted in message card
+   * @param mixed $messageId
+   */
   public function getLinkedMessages($messageId)
   {
     $url = self::ROUTE_MESSAGES . "/" . $messageId . '/linked';

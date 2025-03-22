@@ -4,7 +4,9 @@ namespace FedResSdk\BankruptService;
 
 use FedResSdk\Authorization\TokenStorageInterface;
 use Stringable;
-
+/**
+ * Example of TokenStorageInterface implementation
+ */
 class Token implements TokenStorageInterface
 {
     public function getToken():String

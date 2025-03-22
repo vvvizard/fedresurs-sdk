@@ -1,7 +1,9 @@
 <?php
 
 namespace FedResSdk\BankruptService;
-
+/**
+ * Dictionary with message types
+ */
 class Dictionary
 {
 
