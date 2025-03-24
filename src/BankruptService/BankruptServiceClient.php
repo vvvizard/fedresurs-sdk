@@ -185,7 +185,7 @@ class  BankruptServiceClient extends ClientFedRes
     $resultMessages = [];
     foreach ($messages as $message) {
       $cardData = $this->parseXml($message['content']);
-      if($cardData['files']){
+      if(isset($cardData['files']) && $cardData['files'] === true){
         $fileName  = $this->downloadDir . "/" . $this->messagesType ."/". $message['guid'] . '.zip';
         $message['files'] = $this->getFiles($message['guid'], $fileName);
       }
