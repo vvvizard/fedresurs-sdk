@@ -46,7 +46,7 @@ abstract class ClientFedRes
     abstract public function setAuthHeaders($token);
     abstract public function getMessages();
     abstract public function getAllMessages();
-    
+
     /**
      * Sending a request to the API
      * @param mixed $method
@@ -109,6 +109,19 @@ abstract class ClientFedRes
         $promise->wait();
 
         return $data;
+    }
+
+    /**
+     * Saving attached zip file
+     * @param mixed $url
+     * @param mixed $saveTo
+     * @param string $method
+     */  public function getZip($url, $saveTo, $method = "GET")
+    {
+        $headers = $this->headers;
+        $headers['Content-Type'] = "application/zip";
+        $headers['sink'] = $saveTo;
+        $this->client->request($method, $this->mainUrl . $url, ['headers' => $headers, 'sink' => $saveTo]);
     }
 
     public function setMainUrl($mainUrl)
@@ -184,7 +197,7 @@ abstract class ClientFedRes
             }
         }
     }
-    
+
     /**
      * Setting any params from json,
      * like $this->setParamsFromJson('{"limit": 100, "offset": 0}');
