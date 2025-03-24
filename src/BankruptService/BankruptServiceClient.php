@@ -21,6 +21,8 @@ class  BankruptServiceClient extends ClientFedRes
   protected const ROUTE_AUTH = 'v1/auth';
   public $sort = "DatePublish:asc";
 
+  protected $downloadDir = "";
+
   /**
    * @param \FedResSdk\Authorization\Authorization $auth
    */
@@ -182,7 +184,12 @@ class  BankruptServiceClient extends ClientFedRes
   {
     $resultMessages = [];
     foreach ($messages as $message) {
-      //$message['files'] = $this->getFiles($message['guid']);
+      $cardData = $this->parseXml($message['content']);
+      if($cardData['files']){
+        $fileName  = $this->downloadDir . "/" . $this->messagesType ."/". $message['guid'] . '.zip';
+        $message['files'] = $this->getFiles($message['guid'], $fileName);
+      }
+      $message['content'] = $cardData;
       $message['linked'] = $this->getLinkedMessages($message['guid']);
       $resultMessages[] = $message;
     }
@@ -203,16 +210,15 @@ class  BankruptServiceClient extends ClientFedRes
    * getting files from message card
    * @param mixed $messageId
    */
-  public function getFiles($messageId)
+  public function getFiles($messageId, $saveTo)
   {
     $url = self::ROUTE_MESSAGES . "/" . $messageId . '/files/archive';
-    $response = $this->apiRequest("GET", $url);
-    $data = json_decode($response, true);
-    return $data;
+    $this->getZip($url, $saveTo);
+    return $saveTo;
   }
 
   /**
-   * retuning linked messages noted in message card
+   * returning linked messages noted in message card
    * @param mixed $messageId
    */
   public function getLinkedMessages($messageId)
@@ -223,6 +229,10 @@ class  BankruptServiceClient extends ClientFedRes
     return $data;
   }
 
+  public function setDownloadDir($dir)
+  {
+    $this->downloadDir = $dir;
+  }
   public function setYesterdayDate()
   {
     $this->datePublishBegin = date('Y-m-d', strtotime('-1 day'));

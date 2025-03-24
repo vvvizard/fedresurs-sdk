@@ -19,6 +19,7 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
             'type' => self::TYPE,
             'messageInfo' => $this->getMessageInfo(),
             'publisher' => $this->getPublisher(),
+            'files' => $this->getFiles()
         ];
     }
 }

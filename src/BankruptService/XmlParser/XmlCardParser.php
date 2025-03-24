@@ -44,4 +44,8 @@ abstract class  XmlCardParser
       return $dictionary->getMessageTypeString($this->getMessageType());
     }
 
+    public function getFiles(){
+      return false;
+    }
+
 }
