@@ -12,6 +12,34 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
     {
         parent::__construct($xml);
     }
+    
+    public function getCourtDecision()
+    {
+        return $this->getMessageInfo()->CourtDecision;
+    }
+
+    public function getCourtDecisionText()
+    {
+        return $this->getCourtDecision()->Text;
+    }
+
+    public function getCourtName()
+    {
+        return $this->getCourtDecision()->CourtDecree->CourtName;
+    }
+    
+    public function getCourtId()
+    {
+        return $this->getCourtDecision()->CourtDecree->CourtId;
+    }
+
+    public function getCourtFileNumber(){
+        return $this->getCourtDecision()->CourtDecree->FileNumber;
+    }
+    public function getCourtDecisionDate()
+    {
+        return $this->getCourtDecision()->CourtDecree->DecisionDate;
+    }
 
     public function parse()
     {

@@ -31,8 +31,53 @@ abstract class  XmlCardParser
     {
         return $this->xml->MessageInfo;
     }
+
+    public function getBankrupt()
+    {
+        return $this->xml->Bankrupt;  
+    }
     
-    public function getName(){
+    public function getCategory()
+    {
+         return (string) $this->getBankrupt()->Desctipition;
+    }
+
+    public function getBirthDate(){
+        return (string) $this->getBankrupt()->BirthDate;
+    }
+
+    public function getBirthPlace(){
+        return (string) $this->getBankrupt()->BirthPlace;
+    } 
+
+    public function getBankruptFio(){
+      return [
+        'LastName' => (string)$this->getBankrupt()->FIO->LastName,
+        'MiddleName' => (string)$this->getBankrupt()->FIO->MiddleName,
+        'FirstName' => (string)$this->getBankrupt()->FIO->FirstName,
+      ];
+    }
+
+    public function getBankruptInn(){
+      return (string) $this->getBankrupt()->Inn;
+    }
+
+    public function getBankrtuptSnils(){
+      return (string) $this->getBankrupt()->Snils;
+    }
+
+    public function getBankruptAddress(){
+      return (string) $this->getBankrupt()->Address;
+    }
+
+    public function getBankruptFioString(){
+      return $this->getBankruptFio()['LastName'] . ' ' . $this->getBankruptFio()['FirstName'] . ' ' . $this->getBankruptFio()['MiddleName'];
+    }
+
+    public function getPublisherInn(){
+      return (string) $this->getPublisher()->Inn;
+    }
+    public function getPublisherName(){
       return (string) $this->getPublisher()->Name;
     }
 

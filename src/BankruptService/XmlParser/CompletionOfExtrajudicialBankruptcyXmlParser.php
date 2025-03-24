@@ -36,4 +36,5 @@ class  CompletionOfExtrajudicialBankruptcyXmlParser extends XmlCardParser
     public function getBirthDate(){
         return (string) $this->getMessageInfo()->BirthDate;
     }
+
 }
