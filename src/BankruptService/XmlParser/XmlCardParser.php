@@ -58,11 +58,15 @@ abstract class  XmlCardParser
       ];
     }
 
+    public function getBankruptFioHistory()
+    {
+      return (array) $this->getBankrupt()->FioHistory;
+    }
     public function getBankruptInn(){
       return (string) $this->getBankrupt()->Inn;
     }
 
-    public function getBankrtuptSnils(){
+    public function getBankruptSnils(){
       return (string) $this->getBankrupt()->Snils;
     }
 
@@ -90,6 +94,9 @@ abstract class  XmlCardParser
     }
 
     public function getFiles(){
+      if (property_exists($this, 'FileInfoList')){
+        return true;
+      }
       return false;
     }
 

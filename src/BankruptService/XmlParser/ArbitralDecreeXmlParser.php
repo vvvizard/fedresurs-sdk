@@ -12,7 +12,7 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
     {
         parent::__construct($xml);
     }
-    
+
     public function getCourtDecision()
     {
         return $this->getMessageInfo()->CourtDecision;
@@ -27,13 +27,14 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
     {
         return $this->getCourtDecision()->CourtDecree->CourtName;
     }
-    
+
     public function getCourtId()
     {
         return $this->getCourtDecision()->CourtDecree->CourtId;
     }
 
-    public function getCourtFileNumber(){
+    public function getCourtFileNumber()
+    {
         return $this->getCourtDecision()->CourtDecree->FileNumber;
     }
     public function getCourtDecisionDate()
@@ -45,7 +46,17 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
     {
         return [
             'type' => self::TYPE,
-            'messageInfo' => $this->getMessageInfo(),
+            'fio' => $this->getBankruptFio(),
+            'birthDate' => $this->getBirthDate(),
+            'birthPlace' => $this->getBirthPlace(),
+            'bankruptInn' => $this->getBankruptInn(),
+            'bankruptSnils' => $this->getBankruptSnils(),
+            'courtFileNumber' => $this->getCourtFileNumber(),
+            'courtDecisionDate' => $this->getCourtDecisionDate(),
+            'courtName' => $this->getCourtName(),
+            'courtId' => $this->getCourtId(),
+            'courtDecisionText' => $this->getCourtDecisionText(),
+            'messageType' => $this->getMessageTypeString(),
             'publisher' => $this->getPublisher(),
             'files' => $this->getFiles()
         ];
