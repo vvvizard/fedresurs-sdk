@@ -20,26 +20,26 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
 
     public function getCourtDecisionText()
     {
-        return $this->getCourtDecision()->Text;
+        return (string) $this->getCourtDecision()->Text;
     }
 
     public function getCourtName()
     {
-        return $this->getCourtDecision()->CourtDecree->CourtName;
+        return (string) $this->getCourtDecision()->CourtDecree->CourtName;
     }
 
     public function getCourtId()
     {
-        return $this->getCourtDecision()->CourtDecree->CourtId;
+        return (string) $this->getCourtDecision()->CourtDecree->CourtId;
     }
 
     public function getCourtFileNumber()
     {
-        return $this->getCourtDecision()->CourtDecree->FileNumber;
+        return (string) $this->getCourtDecision()->CourtDecree->FileNumber;
     }
     public function getCourtDecisionDate()
     {
-        return $this->getCourtDecision()->CourtDecree->DecisionDate;
+        return (string) $this->getCourtDecision()->CourtDecree->DecisionDate;
     }
 
     public function parse()
