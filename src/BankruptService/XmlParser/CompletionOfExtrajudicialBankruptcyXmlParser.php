@@ -22,8 +22,9 @@ class  CompletionOfExtrajudicialBankruptcyXmlParser extends XmlCardParser
             'bankruptInn' => $this->getBankruptInn(),
             'bankruptSnils' => $this->getBankruptSnils(),
             'messageType' => $this->getMessageTypeString(),
+            'FioHistory' => $this->getBankruptFioHistory(),
             'publisher' => $this->getPublisher(),
-            'files' => $this->getFiles()
+            'files' => $this->getFiles() ? 1:0
         ];
     }
     public function getNumber(){

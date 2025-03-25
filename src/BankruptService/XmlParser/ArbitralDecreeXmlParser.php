@@ -51,6 +51,7 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
             'birthPlace' => $this->getBirthPlace(),
             'bankruptInn' => $this->getBankruptInn(),
             'bankruptSnils' => $this->getBankruptSnils(),
+            'FioHistory' => $this->getBankruptFioHistory(),
             'courtFileNumber' => $this->getCourtFileNumber(),
             'courtDecisionDate' => $this->getCourtDecisionDate(),
             'courtName' => $this->getCourtName(),
@@ -58,7 +59,7 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
             'courtDecisionText' => $this->getCourtDecisionText(),
             'messageType' => $this->getMessageTypeString(),
             'publisher' => $this->getPublisher(),
-            'files' => $this->getFiles()
+            'files' => $this->getFiles()? 1:0
         ];
     }
 }

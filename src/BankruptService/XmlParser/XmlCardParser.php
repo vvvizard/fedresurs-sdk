@@ -109,7 +109,7 @@ abstract class  XmlCardParser
 
   public function getFiles()
   {
-    if (property_exists($this, 'FileInfoList')) {
+    if (property_exists($this->xml, 'FileInfoList')) {
       return true;
     }
     return false;
