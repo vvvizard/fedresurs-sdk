@@ -115,7 +115,11 @@ protected $messagesType = [
 ];
 
 public function getMessageTypeString($messageType){  
-    return  $this->messagesType[$messageType] ? $this->messagesType[$messageType] : '' ;
+    if(isset($this->messagesType[$messageType]))
+    {    
+          return $this->messagesType[$messageType];
+    }
+    return $messageType;
 }
 
 
