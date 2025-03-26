@@ -10,7 +10,7 @@ class XmlParserFabric
 {
     public static function create($type, $xml)
     {
-        $xmlParser = __NAMESPACE__ . $type;
+        $xmlParser = __NAMESPACE__ ."\\". $type."XmlParser";
 
         return class_exists($xmlParser) ? new $xmlParser($xml) : null;
     }
