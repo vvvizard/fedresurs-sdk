@@ -265,7 +265,7 @@ class  BankruptServiceClient extends ClientFedRes
         if($this->dictionary === null){
             $this->dictionary = new Dictionary();
         }
-        return $this->dictionaryl
+        return $this->dictionary;
   }
 
   public function setDownloadDir($dir)
