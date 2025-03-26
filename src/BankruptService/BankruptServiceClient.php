@@ -233,7 +233,7 @@ class  BankruptServiceClient extends ClientFedRes
    * @param string $type
    */
   protected function parseXml($xml, $type){
-    $xmlParser = new XmlParserFabric($type, $xml);
+    $xmlParser = XmlParserFabric::create($type, $xml);
     return ($xmlParser ==! null) ? $xmlParser->parse() : $xml;
   }
  
