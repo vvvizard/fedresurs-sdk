@@ -7,6 +7,7 @@ use FedResSdk\ClientFedRes;
 use FedResSdk\Config;
 use GuzzleHttp\Psr7\Request;
 use FedResSdk\BankruptService\XmlParser\XmlParserFabric;
+use FedResSdk\BankruptService\Dictionary;
 
 /**
  * Client for BankruptService
@@ -16,6 +17,7 @@ class  BankruptServiceClient extends ClientFedRes
   public const TYPE = 'BankruptService';
   protected const MAX_MESSAGES_LIMIT = 500;
   protected const MAX_QUERY_LIMIT = 8;
+  protected const MESSAGE_LINK_TPL = 'https://old.bankrot.fedresurs.ru/MessageWindow.aspx?ID=';
 
   protected const ROUTE_MESSAGES = 'v1/messages';
   protected const ROUTE_AUTH = 'v1/auth';
@@ -182,6 +184,7 @@ class  BankruptServiceClient extends ClientFedRes
    */
   protected function createMessagesWithCards(array $messages)
   {
+    $dictionary = $this->getDictionary();
     $resultMessages = [];
     foreach ($messages as $message) {
       $cardData = $this->parseXml($message['content']);
@@ -189,11 +192,38 @@ class  BankruptServiceClient extends ClientFedRes
         $fileName  = $this->downloadDir . "/" . $this->messagesType ."/". $message['guid'] . '.zip';
         $message['files'] = $this->getFiles($message['guid'], $fileName);
       }
+      $message['typeText'] = $dictionary->getMessageTypeString($message['type']);
       $message['content'] = $cardData;
-      $message['linked'] = $this->getLinkedMessages($message['guid']);
+      
+      $linkedMessages = $this->getLinkedMessages($message['guid']);
+      $message['linked'] = $this->formatLinkedMessages($linkedMessages, $message['guid']);
+
       $resultMessages[] = $message;
     }
     return $resultMessages;
+  }
+
+  /**
+   * formats data about linked messages
+   * @param mixed $linkedMessages
+   * @return array
+   */
+  protected function formatLinkedMessages($linkedMessages, $messageId)
+  {
+    $dictionary = $this->getDictionary();
+    $formatedMessages = [];
+    foreach ($linkedMessages as $linkedMessage) {
+        if($linkedMessage['guid'] !== $messageId){
+        $formatedMessages[] = [
+          'guid' => $linkedMessage['guid'],
+          'typeText' => $dictionary->getMessageTypeString($linkedMessage['type']),
+          'type'=> $linkedMessage['type'],
+          'link' => self::MESSAGE_LINK_TPL . $linkedMessage['guid'],
+          'datePublish' => $linkedMessage['datePublish'],
+        ];
+      }
+    }
+    return $formatedMessages;
   }
 
   /**
@@ -226,7 +256,16 @@ class  BankruptServiceClient extends ClientFedRes
     $url = self::ROUTE_MESSAGES . "/" . $messageId . '/linked';
     $response = $this->apiRequest("GET", $url);
     $data = json_decode($response, true);
+
     return $data;
+  }
+
+  public function getDictionary()
+  {
+        if($this->dictionary === null){
+            $this->dictionary = new Dictionary();
+        }
+        return $this->dictionaryl
   }
 
   public function setDownloadDir($dir)

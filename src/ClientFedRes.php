@@ -19,6 +19,7 @@ abstract class ClientFedRes
     protected $credentials;
     protected $client;
     protected $auth;
+    protected $dictionary = null;
 
     protected $sort = 'DATE:asc';
     protected $limit = 50;
