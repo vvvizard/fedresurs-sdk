@@ -187,7 +187,7 @@ class  BankruptServiceClient extends ClientFedRes
     $dictionary = $this->getDictionary();
     $resultMessages = [];
     foreach ($messages as $message) {
-      $cardData = $this->parseXml($message['content']);
+      $cardData = $this->parseXml($message['content'], $message['type']);
       if(isset($cardData['files']) && $cardData['files'] === true){
         $fileName  = $this->downloadDir . "/" . $this->messagesType ."/". $message['guid'] . '.zip';
         $message['files'] = $this->getFiles($message['guid'], $fileName);
@@ -230,10 +230,11 @@ class  BankruptServiceClient extends ClientFedRes
    * Parsing xml and converting it to array
    * with formatted data
    * @param mixed $xml
+   * @param string $type
    */
-  protected function parseXml($xml){
-    $xmlParser = new XmlParserFabric($this->messagesType, $xml);
-    return $xmlParser ? $xmlParser->parse() : $xml;
+  protected function parseXml($xml, $type){
+    $xmlParser = new XmlParserFabric($type, $xml);
+    return ($xmlParser ==! null) ? $xmlParser->parse() : $xml;
   }
  
   /**
