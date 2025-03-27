@@ -194,7 +194,7 @@ class  BankruptServiceClient extends ClientFedRes
       }
       $message['typeText'] = $dictionary->getMessageTypeString($message['type']);
       $message['content'] = $cardData;
-      
+      $message['link'] = self::MESSAGE_LINK_TPL . $message['guid'];
       $linkedMessages = $this->getLinkedMessages($message['guid']);
       $message['linked'] = $this->formatLinkedMessages($linkedMessages, $message['guid']);
 
