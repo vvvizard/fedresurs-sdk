@@ -16,6 +16,7 @@ class  CompletionOfExtrajudicialBankruptcyXmlParser extends XmlCardParser
         return [
             'number' => $this->getNumber(),
             'text' => $this->getText(),
+            'category' => $this->getCategory(),
             'fio' => $this->getBankruptFio(),
             'birthDate' => $this->getBirthDate(),
             'birthPlace' => $this->getBirthPlace(),
