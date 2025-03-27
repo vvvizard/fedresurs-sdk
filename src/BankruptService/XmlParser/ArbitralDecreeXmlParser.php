@@ -52,7 +52,7 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
             'address' => $this->getBankruptAddress(),
             'bankruptInn' => $this->getBankruptInn(),
             'bankruptSnils' => $this->getBankruptSnils(),
-            'FioHistory' => $this->getBankruptFioHistory(),
+            'fioHistory' => $this->getBankruptFioHistory(),
             'courtFileNumber' => $this->getCourtFileNumber(),
             'courtDecisionDate' => $this->getCourtDecisionDate(),
             'courtName' => $this->getCourtName(),
