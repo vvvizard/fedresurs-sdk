@@ -51,6 +51,7 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
             'type' => self::TYPE,
             'fio' => $this->getBankruptFio(),
             'category' => $this->getCategory(),
+            'judicalActType' => $this->getJudicalActType(),
             'birthDate' => $this->getBirthDate(),
             'birthPlace' => $this->getBirthPlace(),
             'address' => $this->getBankruptAddress(),
