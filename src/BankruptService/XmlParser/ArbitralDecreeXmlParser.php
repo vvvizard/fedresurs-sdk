@@ -24,7 +24,7 @@ class  ArbitralDecreeXmlParser extends XmlCardParser
     }
 
     public function getJudicalActType(){
-        return $this->getCourtDecision()->DecisionType['Name']
+        return $this->getCourtDecision()->DecisionType['Name'];
     }
     public function getCourtName()
     {
