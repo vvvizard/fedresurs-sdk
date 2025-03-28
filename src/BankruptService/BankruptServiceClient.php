@@ -44,7 +44,6 @@ class  BankruptServiceClient extends ClientFedRes
 
   public function auth()
   {
-    $this->checkToken();
     if (!$this->isAuthorized()) {
 
       $this->body = $this->auth->getAuthDataJson();
@@ -55,6 +54,7 @@ class  BankruptServiceClient extends ClientFedRes
         $this->headers['Authorization'] = 'Bearer ' . $data['jwt'];
       }
     }
+    $this->checkToken();
   }
 
   /**
@@ -287,8 +287,10 @@ class  BankruptServiceClient extends ClientFedRes
     $url = self::ROUTE_MESSAGES . '?offset=0&limit=1';
 
     ($this->sort !== null) ? $url .= '&sort=' . $this->sort : '';
-    ($this->dateBegin !== null) ? $url .= '&dateBegin=' . $this->dateBegin : '';
-    ($this->dateEnd !== null) ? $url .= '&dateEnd=' . $this->dateEnd : '';
+
+    ($this->datePublishBegin !== null) ? $url .= '&datePublishBegin=' . $this->datePublishBegin : '';
+
+    ($this->datePublishEnd !== null) ? $url .= '&datePublishEnd=' . $this->datePublishEnd : '';
 
     $response = $this->apiRequest("GET", $url);
     $data = json_decode($response, true);

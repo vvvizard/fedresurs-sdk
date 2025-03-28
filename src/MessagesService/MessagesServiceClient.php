@@ -35,7 +35,7 @@ class  MessagesServiceClient extends ClientFedRes
 
   public function auth()
   {
-    $this->checkToken();
+   
     if (!$this->isAuthorized()) {
       $this->body = $this->auth->getAuthDataWithHashJson();
       $this->auth->attempPlus();
@@ -48,6 +48,8 @@ class  MessagesServiceClient extends ClientFedRes
         $this->setAuthHeaders($data['jwt']);
       }
     }
+    
+    $this->checkToken();
   }
 
   public function setAuthHeaders($token)
