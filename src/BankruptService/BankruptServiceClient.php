@@ -293,8 +293,7 @@ class  BankruptServiceClient extends ClientFedRes
     ($this->datePublishEnd !== null) ? $url .= '&datePublishEnd=' . $this->datePublishEnd : '';
 
     $response = $this->apiRequest("GET", $url);
-    $data = json_decode($response, true);
-    if (!empty($data)) {
+    if ($response) {
       return true;
     }
 

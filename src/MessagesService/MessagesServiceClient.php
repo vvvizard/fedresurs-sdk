@@ -48,7 +48,7 @@ class  MessagesServiceClient extends ClientFedRes
         $this->setAuthHeaders($data['jwt']);
       }
     }
-    
+
     $this->checkToken();
   }
 
@@ -106,8 +106,7 @@ class  MessagesServiceClient extends ClientFedRes
     ($this->dateEnd !== null) ? $url .= '&dateEnd=' . $this->dateEnd : '';
 
     $response = $this->apiRequest("GET", $url);
-    $data = json_decode($response, true);
-    if (!empty($data)) {
+    if ($response) {
       return true;
     }
 
