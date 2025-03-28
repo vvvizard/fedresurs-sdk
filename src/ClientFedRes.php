@@ -62,8 +62,8 @@ abstract class ClientFedRes
             echo "bad query";
             var_dump($e->getMessage());
         } catch (\Exception $e) {
-            echo "Exception";
-            var_dump($e);
+            //echo "Exception";
+           // var_dump($e);
             $response = $e->getResponse();
             $status = $response->getStatusCode();
 
@@ -82,7 +82,7 @@ abstract class ClientFedRes
                     echo "auth error";
                     die();
                 }
-                $this->auth();
+               return $this->auth();
             }
             die();
         }

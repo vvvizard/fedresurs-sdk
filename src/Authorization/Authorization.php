@@ -65,9 +65,10 @@ class Authorization
     public function deleteToken(){
         $this->unsetToken();
         if ($this->tokenStorage !== null) {
-            return $token = $this->tokenStorage->deleteToken($token);
+            return $token = $this->tokenStorage->deleteToken();
         } else {
-            return file_put_contents('/var/www/html/public/fedres-sdk/token.txt', '');
+            $this->token = null;
+            return $this->token;
         }
 
     }
@@ -78,10 +79,9 @@ class Authorization
         if ($this->tokenStorage !== null) {
             return $token = $this->tokenStorage->storeToken($token);
         } else {
-            return file_put_contents('/var/www/html/public/fedres-sdk/token.txt', $token);
+            $this->token = $token;
+            return $this->token;
          }
-        
-        return ;
     }
 
     public function loadToken()
