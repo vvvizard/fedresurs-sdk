@@ -44,9 +44,11 @@ abstract class ClientFedRes
     }
 
     abstract public function auth();
+    abstract public function checkToken();
     abstract public function setAuthHeaders($token);
     abstract public function getMessages();
     abstract public function getAllMessages();
+
 
     /**
      * Sending a request to the API

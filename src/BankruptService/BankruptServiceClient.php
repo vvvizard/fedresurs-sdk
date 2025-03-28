@@ -55,7 +55,7 @@ class  BankruptServiceClient extends ClientFedRes
       }
     }
   }
-  
+
   /**
    * setting headers for auth
    * @param mixed $token
@@ -278,4 +278,24 @@ class  BankruptServiceClient extends ClientFedRes
     $this->datePublishBegin = date('Y-m-d', strtotime('-1 day'));
     $this->datePublishEnd = $this->datePublishBegin;
   }
+  
+  public function checkToken()
+  {
+
+    $url = self::ROUTE_MESSAGES . '?offset=0&limit=1';
+
+    ($this->sort !== null) ? $url .= '&sort=' . $this->sort : '';
+    ($this->dateBegin !== null) ? $url .= '&dateBegin=' . $this->dateBegin : '';
+    ($this->dateEnd !== null) ? $url .= '&dateEnd=' . $this->dateEnd : '';
+
+    $response = $this->apiRequest("GET", $url);
+    $data = json_decode($response, true);
+    if (!empty($data)) {
+      return true;
+    }
+
+    return false;
+  }
+  
+
 }

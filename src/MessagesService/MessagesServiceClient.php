@@ -15,6 +15,9 @@ class  MessagesServiceClient extends ClientFedRes
 
   public const TYPE = 'MessagesService';
 
+  protected const ROUTE_MESSAGES = 'v1/messages';
+  protected const ROUTE_AUTH = 'v1/auth';
+
   /**
    * @param \FedResSdk\Authorization\Authorization $auth
    */
@@ -35,7 +38,7 @@ class  MessagesServiceClient extends ClientFedRes
     if (!$this->isAuthorized()) {
       $this->body = $this->auth->getAuthDataWithHashJson();
       $this->auth->attempPlus();
-      $response = $this->apiRequest("POST", 'v1/auth');
+      $response = $this->apiRequest("POST", self::ROUTE_AUTH);
 
       if ($response) {
         $data = json_decode($response, true);
@@ -51,7 +54,7 @@ class  MessagesServiceClient extends ClientFedRes
     $this->headers['Authorization'] = 'Bearer ' . $token;
   }
 
-   /**
+  /**
    * preparing url for request
    */
   public function prepareUrl()
@@ -88,5 +91,23 @@ class  MessagesServiceClient extends ClientFedRes
   {
     $this->setLimit(100);
     return $this->getMessages();
+  }
+
+  public function checkToken()
+  {
+
+    $url = self::ROUTE_MESSAGES . '?offset=0&limit=1';
+
+    ($this->sort !== null) ? $url .= '&sort=' . $this->sort : '';
+    ($this->dateBegin !== null) ? $url .= '&dateBegin=' . $this->dateBegin : '';
+    ($this->dateEnd !== null) ? $url .= '&dateEnd=' . $this->dateEnd : '';
+
+    $response = $this->apiRequest("GET", $url);
+    $data = json_decode($response, true);
+    if (!empty($data)) {
+      return true;
+    }
+
+    return false;
   }
 }
