@@ -44,6 +44,7 @@ class  BankruptServiceClient extends ClientFedRes
 
   public function auth()
   {
+    $this->checkToken();
     if (!$this->isAuthorized()) {
 
       $this->body = $this->auth->getAuthDataJson();
@@ -109,7 +110,7 @@ class  BankruptServiceClient extends ClientFedRes
    */
   public function getArbitralDecree($getAll = false)
   {
-    $this->messagesType= "ArbitralDecree";
+    $this->messagesType = "ArbitralDecree";
     return $getAll  ? $this->getAllMessages() : $this->getMessages();
   }
 
@@ -188,8 +189,8 @@ class  BankruptServiceClient extends ClientFedRes
     $resultMessages = [];
     foreach ($messages as $message) {
       $cardData = $this->parseXml($message['content'], $message['type']);
-      if(isset($cardData['files']) && $cardData['files'] === true){
-        $fileName  = $this->downloadDir . "/" . $this->messagesType ."/". $message['guid'] . '.zip';
+      if (isset($cardData['files']) && $cardData['files'] === true) {
+        $fileName  = $this->downloadDir . "/" . $this->messagesType . "/" . $message['guid'] . '.zip';
         $message['files'] = $this->getFiles($message['guid'], $fileName);
       }
       $message['typeText'] = $dictionary->getMessageTypeString($message['type']);
@@ -213,11 +214,11 @@ class  BankruptServiceClient extends ClientFedRes
     $dictionary = $this->getDictionary();
     $formatedMessages = [];
     foreach ($linkedMessages as $linkedMessage) {
-        if($linkedMessage['guid'] !== $messageId){
+      if ($linkedMessage['guid'] !== $messageId) {
         $formatedMessages[] = [
           'guid' => $linkedMessage['guid'],
           'typeText' => $dictionary->getMessageTypeString($linkedMessage['type']),
-          'type'=> $linkedMessage['type'],
+          'type' => $linkedMessage['type'],
           'link' => self::MESSAGE_LINK_TPL . $linkedMessage['guid'],
           'datePublish' => $linkedMessage['datePublish'],
         ];
@@ -232,11 +233,12 @@ class  BankruptServiceClient extends ClientFedRes
    * @param mixed $xml
    * @param string $type
    */
-  protected function parseXml($xml, $type){
+  protected function parseXml($xml, $type)
+  {
     $xmlParser = XmlParserFabric::create($type, $xml);
-    return ($xmlParser ==! null) ? $xmlParser->parse() : $xml;
+    return ($xmlParser == ! null) ? $xmlParser->parse() : $xml;
   }
- 
+
   /**
    * getting files from message card
    * @param mixed $messageId
@@ -263,10 +265,10 @@ class  BankruptServiceClient extends ClientFedRes
 
   public function getDictionary()
   {
-        if($this->dictionary === null){
-            $this->dictionary = new Dictionary();
-        }
-        return $this->dictionary;
+    if ($this->dictionary === null) {
+      $this->dictionary = new Dictionary();
+    }
+    return $this->dictionary;
   }
 
   public function setDownloadDir($dir)
@@ -278,7 +280,7 @@ class  BankruptServiceClient extends ClientFedRes
     $this->datePublishBegin = date('Y-m-d', strtotime('-1 day'));
     $this->datePublishEnd = $this->datePublishBegin;
   }
-  
+
   public function checkToken()
   {
 
@@ -296,6 +298,4 @@ class  BankruptServiceClient extends ClientFedRes
 
     return false;
   }
-  
-
 }

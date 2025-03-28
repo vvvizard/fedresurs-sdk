@@ -35,6 +35,7 @@ class  MessagesServiceClient extends ClientFedRes
 
   public function auth()
   {
+    $this->checkToken();
     if (!$this->isAuthorized()) {
       $this->body = $this->auth->getAuthDataWithHashJson();
       $this->auth->attempPlus();
