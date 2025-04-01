@@ -195,7 +195,7 @@ class  BankruptServiceClient extends ClientFedRes
       }
       $message['typeText'] = $dictionary->getMessageTypeString($message['type']);
       $message['content'] = $cardData;
-      $message['link'] = self::MESSAGE_LINK_TPL . $message['guid'];
+      $message['link'] = self::MESSAGE_LINK_TPL . $this->guidToLinkFormat($message['guid']);
       $linkedMessages = $this->getLinkedMessages($message['guid']);
       $message['linked'] = $this->formatLinkedMessages($linkedMessages, $message['guid']);
 
@@ -219,12 +219,22 @@ class  BankruptServiceClient extends ClientFedRes
           'guid' => $linkedMessage['guid'],
           'typeText' => $dictionary->getMessageTypeString($linkedMessage['type']),
           'type' => $linkedMessage['type'],
-          'link' => self::MESSAGE_LINK_TPL . $linkedMessage['guid'],
+          'link' => self::MESSAGE_LINK_TPL . $this->guidToLinkFormat($linkedMessage['guid']),
           'datePublish' => $linkedMessage['datePublish'],
         ];
       }
     }
     return $formatedMessages;
+  }
+
+  /**
+   * converting guid to link format
+   * @param mixed $guid
+   * @return string
+   */
+  protected function guidToLinkFormat($guid)
+  {
+    return strtoupper(str_replace('-', '', $guid));
   }
 
   /**
