@@ -47,7 +47,7 @@ abstract class ClientFedRes
     abstract public function checkToken();
     abstract public function setAuthHeaders($token);
     abstract public function getMessages();
-    abstract public function getAllMessages();
+
 
 
     /**
