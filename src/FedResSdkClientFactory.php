@@ -24,8 +24,8 @@ class FedResSdkClientFactory
                 $client->setMode('develop');
                 return $client;
             case 'BankruptServiceTest':
+                $auth->setMode('develop');
                 $client = new BankruptServiceClient($auth);
-                $client->setMode('develop');
                 return $client;
             default:
                 throw new \Exception("Invalid type");
