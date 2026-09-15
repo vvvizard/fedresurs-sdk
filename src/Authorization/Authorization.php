@@ -9,11 +9,11 @@ class Authorization
 {
 
     protected $token = null;
-    protected $mode = "production";
-    protected $tokenStorage;
+    protected String $mode = "production";
+    protected TokenStorageInterface $tokenStorage;
 
-    protected $credentials;
-    protected $type;
+    protected AuthorizationInterface $credentials;
+    protected String $type;
 
     protected $attemps = 0;
 
@@ -30,6 +30,11 @@ class Authorization
         return $this->type;
     }
 
+    public function setType(String $type)
+    {
+        $this->type = $type;
+    }
+
     public function getToken()
     {
         return $this->token;
@@ -43,7 +48,8 @@ class Authorization
         return false;
     }
 
-    public function setMode($mode){
+    public function setMode($mode)
+    {
         $this->mode = $mode;
     }
 
@@ -62,7 +68,8 @@ class Authorization
         $this->setToken(NULL);
     }
 
-    public function deleteToken(){
+    public function deleteToken()
+    {
         $this->unsetToken();
         if ($this->tokenStorage !== null) {
             return $token = $this->tokenStorage->deleteToken();
@@ -70,7 +77,6 @@ class Authorization
             $this->token = null;
             return $this->token;
         }
-
     }
 
     public function storeToken($token)
@@ -81,7 +87,7 @@ class Authorization
         } else {
             $this->token = $token;
             return $this->token;
-         }
+        }
     }
 
     public function loadToken()
@@ -98,15 +104,18 @@ class Authorization
         return false;
     }
 
-    public function attempPlus(){
+    public function attempPlus()
+    {
         $this->attemps += 1;
     }
 
-    public function getAttemps(){
+    public function getAttemps()
+    {
         return $this->attemps;
-    }   
+    }
 
-    public function clearAttemps(){
+    public function clearAttemps()
+    {
         $this->attemps = 0;
     }
 

@@ -64,8 +64,6 @@ abstract class ClientFedRes
             echo "bad query";
             var_dump($e->getMessage());
         } catch (\Exception $e) {
-            //echo "Exception";
-           // var_dump($e);
             $response = $e->getResponse();
             $status = $response->getStatusCode();
 
