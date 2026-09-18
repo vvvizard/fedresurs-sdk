@@ -5,6 +5,7 @@ namespace FedResSdk;
 use FedResSdk\Authorization\Authorization;
 use FedResSdk\MessagesService\MessagesServiceClient;
 use FedResSdk\BankruptService\BankruptServiceClient;
+use FedResSdk\BankruptService\BankruptSearch;
 use FedResSdk\BankruptService\BankruptMessages;
 
 class FedResSdkClientFactory
@@ -20,8 +21,8 @@ class FedResSdkClientFactory
             case 'BankruptSearch':
                 return new BankruptSearch($auth);
             case 'MessageServiceTest':
+                $auth->setMode('develop');
                 $client = new MessagesServiceClient($auth);
-                $client->setMode('develop');
                 return $client;
             case 'BankruptServiceTest':
                 $auth->setMode('develop');
