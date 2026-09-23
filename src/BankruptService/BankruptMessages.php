@@ -38,8 +38,16 @@ class  BankruptMessages extends  BankruptServiceClient
     public function getBankruptMessagesByID(array $bankruptID): array
     {
         $this->route = self::ROUTE_MESSAGES;
-        $this->bankruptGuid = implode(',' , $bankruptID);
+        $this->bankruptGuid = implode(',', $bankruptID);
+
+        $this->dateBegin = null;
+        $this->dateEnd = null;
+        $this->messagesType = null;
+        $this->datePublishBegin = null;
+        $this->datePublishEnd = null;
+
         $url = $this->prepareUrl();
+
         $response = $this->apiRequest("GET", $url);
         $data = json_decode($response, true);
         return $data;
