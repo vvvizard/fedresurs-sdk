@@ -35,8 +35,15 @@ class  BankruptMessages extends  BankruptServiceClient
         return $data;
     }
 
-
-
+    public function getBankruptMessagesByID(array $bankruptID): array
+    {
+        $this->route = self::ROUTE_MESSAGES;
+        $this->bankruptGuid = implode(',' , $bankruptID);
+        $url = $this->prepareUrl();
+        $response = $this->apiRequest("GET", $url);
+        $data = json_decode($response, true);
+        return $data;
+    }
 
     /**
      * Gets list of messages with all data from inner cards 
