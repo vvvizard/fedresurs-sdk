@@ -12,9 +12,10 @@ class  BankruptSearch extends  BankruptServiceClient
 {
 
     protected const ROUTE_BANKRUPTS = 'v1/bankrupts';
+    protected const UID_TITLE = 'guid';
 
     protected $bankruptType; // Company|Person
-    protected $bankruptGuid; // Bankrupt ID
+    public $bankruptGuid; // Bankrupt ID
     protected $bankruptName; // Bankrupt name
 
     protected $ogrnip;
@@ -22,6 +23,8 @@ class  BankruptSearch extends  BankruptServiceClient
     protected $snils;
     protected $inn;
     protected $birthdate;
+
+    protected string $type = "Person";
 
     public function __construct(Authorization $auth)
     {
@@ -38,11 +41,23 @@ class  BankruptSearch extends  BankruptServiceClient
         return $data;
     }
 
+    public function getBankruptByInn(Int $inn)
+    {
+        $this->inn = $inn;
+        return $this->getBankrupt();
+    }
+
+    public function getBunkruptIdByInn(Int $inn)
+    {
+        $bankruptData = $this->getBankruptByInn($inn);
+        return $this->getIdFromData($bankruptData);
+    }
     public function prepareUrl()
     {
         $url = $this->route;
 
-        ($this->offset !== null) ? $url .= '?offset=' . $this->offset : 0;
+        ($this->type !== null) ? $url .= '?type=' . $this->type : '';
+        ($this->offset !== null) ? $url .= '&offset=' . $this->offset : 0;
         ($this->limit !== null) ? $url .= '&limit=' . $this->limit : '';
         ($this->sort !== null) ? $url .= '&sort=' . $this->sort : '';
         ($this->bankruptGuid !== null) ? $url .=  '&guid=' . $this->bankruptGuid : '';
@@ -56,4 +71,10 @@ class  BankruptSearch extends  BankruptServiceClient
 
         return $url;
     }
+
+    protected function getIdFromData($bankruptData)
+    {
+        return array_column($bankruptData['pageData'], self::UID_TITLE);
+    }
+
 }
