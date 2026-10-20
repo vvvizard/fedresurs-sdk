@@ -7,6 +7,7 @@ use GuzzleHttp\Psr7\Request;
 use FedResSdk\Authorization\Authorization;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Pool;
+use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Response;
 
 abstract class ClientFedRes
@@ -20,7 +21,6 @@ abstract class ClientFedRes
     protected $client;
     protected $auth;
     protected $dictionary = null;
-
     protected $sort = 'DATE:asc';
     protected $limit = 50;
     protected $offset = 0;
@@ -32,6 +32,8 @@ abstract class ClientFedRes
 
     protected const DEFAULT_DAYS_INTERVAL = 1;
     protected const DEFAULT_CONCURRENCY = 5;
+
+    protected bool $enableAsync = false;
 
     public function __construct(Authorization $auth)
     {
@@ -55,10 +57,15 @@ abstract class ClientFedRes
      * @param mixed $method
      * @param mixed $url
      */
-    protected function apiRequest($method, $url)
+    protected function apiRequest($method, $url): mixed
     {
         try {
             $request = new Request($method, $this->mainUrl . $url, $this->headers, $this->body);
+
+            if ($this->enableAsync) {
+                return $this->client->sendAsync($request);
+            }
+
             $response = $this->client->sendAsync($request)->wait();
         } catch (\InvalidArgumentException $e) {
             echo "bad query";
@@ -82,7 +89,7 @@ abstract class ClientFedRes
                     echo "auth error";
                     die();
                 }
-               return $this->auth();
+                return $this->auth();
             }
             die();
         }
@@ -110,6 +117,14 @@ abstract class ClientFedRes
         $promise->wait();
 
         return $data;
+    }
+
+    protected function parseResponse(mixed $response)
+    {
+        if (!is_string($response)) {
+            return $response;
+        }
+        return json_decode($response, true);
     }
 
     /**
@@ -227,6 +242,17 @@ abstract class ClientFedRes
         $this->dateBegin = date('Y-m-d', time() - $daysInterval * $hours24);
         $this->dateEnd = date('Y-m-d', time());
     }
+
+    public function enableAsync()
+    {
+        $this->enableAsync = true;
+    }
+
+    public function disableAsync()
+    {
+        $this->enableAsync = false;
+    }
+
     public function isAuthorized()
     {
         if ($this->auth->issetToken()) {
