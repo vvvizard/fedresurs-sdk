@@ -86,8 +86,7 @@ class  MessagesServiceClient extends ClientFedRes
     $url = $this->prepareUrl();
 
     $response = $this->apiRequest("GET", $url);
-    $data = json_decode($response, true);
-    return $data;
+   return $this->parseResponse($response);
   }
 
   public function getAllMessages(bool $getAll = false)

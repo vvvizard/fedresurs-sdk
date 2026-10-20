@@ -31,8 +31,7 @@ class  BankruptMessages extends  BankruptServiceClient
     {
         $url = self::ROUTE_MESSAGES . $id;
         $response = $this->apiRequest("GET", $url);
-        $data = json_decode($response, true);
-        return $data;
+        return $this->parseResponse($response);
     }
 
     public function getBankruptMessagesByID(array $bankruptID): array
@@ -49,8 +48,7 @@ class  BankruptMessages extends  BankruptServiceClient
         $url = $this->prepareUrl();
 
         $response = $this->apiRequest("GET", $url);
-        $data = json_decode($response, true);
-        return $data;
+        return $this->parseResponse($response);
     }
 
     /**

@@ -82,7 +82,7 @@ class  BankruptServiceClient extends ClientFedRes
     ($this->messagesType !== null) ? $url .= '&type=' . $this->messagesType : '';
     ($this->bankruptGuid !== null) ? $url .=  '&bankruptGUID=' . $this->bankruptGuid : '';
 
-    return $url; 
+    return $url;
   }
 
   public function getMessages()
@@ -90,8 +90,7 @@ class  BankruptServiceClient extends ClientFedRes
     $this->route = self::ROUTE_MESSAGES;
     $url = $this->prepareUrl();
     $response = $this->apiRequest("GET", $url);
-    $data = json_decode($response, true);
-    return $data;
+    return $this->parseResponse($response);
   }
 
   /**
@@ -135,9 +134,7 @@ class  BankruptServiceClient extends ClientFedRes
   {
     $url = self::ROUTE_MESSAGES . "/" . $messageId . '/linked';
     $response = $this->apiRequest("GET", $url);
-    $data = json_decode($response, true);
-
-    return $data;
+    return $this->parseResponse($response);
   }
 
   public function getDictionary()

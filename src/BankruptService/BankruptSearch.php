@@ -37,8 +37,12 @@ class  BankruptSearch extends  BankruptServiceClient
         $this->route = self::ROUTE_BANKRUPTS;
         $url = $this->prepareUrl();
         $response = $this->apiRequest("GET", $url);
-        $data = json_decode($response, true);
-        return $data;
+
+        if (!is_string($response)) {
+            return $response;
+        }
+
+       return $this->parseResponse($response);
     }
 
     public function getBankruptByInn(Int $inn)
@@ -49,6 +53,7 @@ class  BankruptSearch extends  BankruptServiceClient
 
     public function getBunkruptIdByInn(Int $inn)
     {
+        //TODO: fix for promises
         $bankruptData = $this->getBankruptByInn($inn);
         return $this->getIdFromData($bankruptData);
     }
@@ -76,5 +81,4 @@ class  BankruptSearch extends  BankruptServiceClient
     {
         return array_column($bankruptData['pageData'], self::UID_TITLE);
     }
-
 }
