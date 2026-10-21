@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Stream;
 
 abstract class ClientFedRes
 {
@@ -121,9 +122,12 @@ abstract class ClientFedRes
 
     protected function parseResponse(mixed $response)
     {
-        if (!is_string($response)) {
+        if ($response instanceof Stream) {
+            $response = (string) $response;
+        } elseif (!is_string($response)) {
             return $response;
         }
+
         return json_decode($response, true);
     }
 
