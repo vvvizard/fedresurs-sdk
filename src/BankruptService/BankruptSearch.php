@@ -77,7 +77,7 @@ class  BankruptSearch extends  BankruptServiceClient
         return $url;
     }
 
-    protected function getIdFromData($bankruptData)
+    public function getIdFromData($bankruptData)
     {
         return array_column($bankruptData['pageData'], self::UID_TITLE);
     }
