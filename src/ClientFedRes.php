@@ -14,22 +14,22 @@ use GuzzleHttp\Psr7\Stream;
 abstract class ClientFedRes
 {
 
-    protected $headers;
-    protected $body;
-    protected $mainUrl;
-    protected $route;
-    protected $credentials;
-    protected $client;
-    protected $auth;
-    protected $dictionary = null;
-    protected $sort = 'DATE:asc';
-    protected $limit = 50;
-    protected $offset = 0;
-    protected $dateBegin;
-    protected $dateEnd;
-    protected $datePublishBegin;
-    protected $datePublishEnd;
-    protected $messagesType;
+    protected array $headers;
+    protected mixed $body;
+    protected mixed $mainUrl;
+    protected mixed $route;
+    protected mixed $credentials;
+    protected Client $client;
+    protected Authorization $auth;
+    protected mixed $dictionary = null;
+    protected string $sort = 'DATE:asc';
+    protected int $limit = 50;
+    protected int $offset = 0;
+    protected mixed $dateBegin;
+    protected mixed $dateEnd;
+    protected mixed $datePublishBegin;
+    protected mixed $datePublishEnd;
+    protected mixed $messagesType;
     protected ?bool $includeContent = null;
 
     protected const DEFAULT_DAYS_INTERVAL = 1;
@@ -137,7 +137,7 @@ abstract class ClientFedRes
      * @param mixed $url
      * @param mixed $saveTo
      * @param string $method
-     */  public function getZip($url, $saveTo, $method = "GET")
+     */  public function getZip(mixed $url, mixed $saveTo, string  $method = "GET")
     {
         $headers = $this->headers;
         $headers['Content-Type'] = "application/zip";
@@ -145,22 +145,22 @@ abstract class ClientFedRes
         $this->client->request($method, $this->mainUrl . $url, ['headers' => $headers, 'sink' => $saveTo]);
     }
 
-    public function setMainUrl($mainUrl)
+    public function setMainUrl(mixed $mainUrl)
     {
         $this->mainUrl = $mainUrl;
     }
 
-    public function setRoute($route)
+    public function setRoute(mixed $route)
     {
         $this->route = $route;
     }
 
-    protected function setHeaders($headers)
+    protected function setHeaders(array $headers)
     {
         $this->headers = $headers;
     }
 
-    protected function setBody($body)
+    protected function setBody(mixed $body)
     {
         $this->body = $body;
     }
@@ -175,17 +175,17 @@ abstract class ClientFedRes
         return $this->body;
     }
 
-    public function setLimit($limit)
+    public function setLimit(int $limit)
     {
         $this->limit = $limit;
     }
 
-    public function setOffset($offset)
+    public function setOffset(int $offset)
     {
         $this->offset = $offset;
     }
 
-    public function setDates($dateBegin, $dateEnd)
+    public function setDates(mixed $dateBegin, mixed $dateEnd)
     {
         $this->dateBegin = $dateBegin;
         $this->dateEnd = $dateEnd;
@@ -193,12 +193,12 @@ abstract class ClientFedRes
         $this->datePublishEnd = $dateEnd;
     }
 
-    public function setMessagesType($messagesType)
+    public function setMessagesType(mixed $messagesType)
     {
         $this->messagesType = $messagesType;
     }
 
-    public function setSort($sort)
+    public function setSort(string $sort)
     {
         $this->sort = $sort;
     }
@@ -209,7 +209,7 @@ abstract class ClientFedRes
      * @param mixed $params
      * @return void
      */
-    public function setParams($params = [])
+    public function setParams(array $params = [])
     {
         $classParams = get_class_vars(static::class);
         foreach ($params as $key => $value) {
@@ -225,7 +225,7 @@ abstract class ClientFedRes
      * @param mixed $json
      * @return void
      */
-    public function setParamsFromJson($json)
+    public function setParamsFromJson(mixed $json)
     {
         $params = json_decode($json, true);
         $this->setParams($params);
@@ -241,7 +241,7 @@ abstract class ClientFedRes
         return json_encode(get_object_vars($this));
     }
 
-    public function initDates($daysInterval = self::DEFAULT_DAYS_INTERVAL)
+    public function initDates(int $daysInterval = self::DEFAULT_DAYS_INTERVAL)
     {
         $hours24 = 60 * 60 * 24;
         $this->dateBegin = date('Y-m-d', time() - $daysInterval * $hours24);
