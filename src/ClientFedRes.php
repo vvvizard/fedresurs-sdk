@@ -30,6 +30,7 @@ abstract class ClientFedRes
     protected $datePublishBegin;
     protected $datePublishEnd;
     protected $messagesType;
+    protected ?bool $includeContent = null;
 
     protected const DEFAULT_DAYS_INTERVAL = 1;
     protected const DEFAULT_CONCURRENCY = 5;
@@ -255,6 +256,16 @@ abstract class ClientFedRes
     public function disableAsync()
     {
         $this->enableAsync = false;
+    }
+
+    public function enableIncludeContentOn()
+    {
+        $this->includeContent = true;
+    }
+
+    public function disableIncludeContent()
+    {
+        $this->includeContent = false;
     }
 
     public function isAuthorized()

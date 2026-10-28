@@ -21,7 +21,7 @@ class  BankruptServiceClient extends ClientFedRes
   protected const ROUTE_MESSAGES = 'v1/messages';
   protected const ROUTE_AUTH = 'v1/auth';
   public $sort = "DatePublish:asc";
-  public $bankruptGuid = null;
+  public ?string $bankruptGuid = null;
 
   protected $downloadDir = "";
 
@@ -81,7 +81,7 @@ class  BankruptServiceClient extends ClientFedRes
     ($this->datePublishEnd !== null) ? $url .= '&datePublishEnd=' . $this->datePublishEnd : '';
     ($this->messagesType !== null) ? $url .= '&type=' . $this->messagesType : '';
     ($this->bankruptGuid !== null) ? $url .=  '&bankruptGUID=' . $this->bankruptGuid : '';
-
+    ($this->includeContent !== null) ? $url .= '&includeContent=' . $this->bankruptGuid : '';
     return $url;
   }
 
